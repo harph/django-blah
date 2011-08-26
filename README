@@ -1,0 +1,6 @@
+==============
+Django Blah
+==============
+
+Blah, is a simple Django App, which allows you to associated
+comments to any Django model object.
