@@ -22,7 +22,7 @@ class ModelCommentManager(models.Manager):
 		"""
 		return Comment.objects.add_comment(self.instance, content, owner)
 
-	def get_for_owner(self, owner):
+	def get_owned_by(self, owner):
 		"""
 		Creates a queryset that matches all the comments associated with calling instance and owned by the given owner.
 		
@@ -103,7 +103,18 @@ class CommentManager(models.Manager):
 		ctype = ContentType.objects.get_for_model(obj)
 		owner_ctype = ContentType.objects.get_for_model(owner)
 		return self.filter(content_type__pk = ctype.pk, object_id = obj.pk, owner_content_type__pk = owner_ctype.pk, owner_id = owner.pk)
+	
+	def get_owned_by(self, owner):
+		"""
+		Creates a queryset that matches all the comments owned by the given owner.
 		
+		:param owner: django.db.models.Model instance for which you want to find the comments that belong to it.
+
+		Returns:
+		A queryset that matches the comments owned by the given owner.
+		"""
+		owner_ctype = ContentType.objects.get_for_model(owner)
+		return self.filter(owner_content_type__pk = owner_ctype.pk, owner_id = owner.pk)
 		
 
 class CommentDescriptor(object):
